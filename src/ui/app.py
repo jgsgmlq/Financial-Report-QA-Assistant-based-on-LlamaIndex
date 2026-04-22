@@ -1,7 +1,23 @@
 import os
 import re
 import gradio as gr
+import gradio_client.utils as gradio_client_utils
 from pathlib import Path
+
+
+def _patch_gradio_client_schema():
+    """Pydantic v2 can emit additionalProperties as bool; gradio_client 1.3 assumes dict."""
+    _orig = gradio_client_utils._json_schema_to_python_type
+
+    def _wrap(schema, defs):
+        if not isinstance(schema, dict):
+            return "Any"
+        return _orig(schema, defs)
+
+    gradio_client_utils._json_schema_to_python_type = _wrap
+
+
+_patch_gradio_client_schema()
 from src.utils.config import load_config
 from src.ingest.pdf_parser import load_pdf_documents
 from src.ingest.chunker import get_chunks
@@ -271,4 +287,8 @@ with gr.Blocks(title="Insight | 金融研报分析引擎", css=custom_css, theme
 if __name__ == "__main__":
     config = load_config()
     data_dir_abs = os.path.abspath(config['storage']['data_dir'])
-    demo.queue().launch(server_name="0.0.0.0", server_port=7860, allowed_paths=[data_dir_abs])
+    # 127.0.0.1: Gradio's post-launch localhost probe fails with 0.0.0.0 on many setups.
+    # Use env GRADIO_SERVER_NAME=0.0.0.0 when you need LAN binding.
+    _host = os.environ.get("GRADIO_SERVER_NAME", "127.0.0.1")
+    _port = int(os.environ.get("GRADIO_SERVER_PORT", "7860"))
+    demo.queue().launch(server_name=_host, server_port=_port, allowed_paths=[data_dir_abs])

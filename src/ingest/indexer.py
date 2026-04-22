@@ -69,6 +69,18 @@ def _generate_raptor_nodes(nodes: List[BaseNode], embed_model, llm) -> List[Base
     return all_nodes
 # -----------------------------------
 
+def _get_or_init_embed_model(config):
+    """Avoid triggering LlamaIndex default OpenAI embed resolver."""
+    embed_model = getattr(Settings, "_embed_model", None)
+    if embed_model is None:
+        embed_model = HuggingFaceEmbedding(
+            model_name=config["embedding"]["model"],
+            device=config["embedding"]["device"],
+        )
+        Settings.embed_model = embed_model
+    return embed_model
+
+
 def build_or_load_index(nodes: List[BaseNode] = None) -> VectorStoreIndex:
     """
     加载持久化或从头构建包含 RAPTOR 支持的向量索引。
@@ -79,12 +91,8 @@ def build_or_load_index(nodes: List[BaseNode] = None) -> VectorStoreIndex:
     collection_name = "financial_reports"
     use_raptor = config.get("raptor", {}).get("use_raptor", False)
     
-    # 确保 Embed 
-    if not hasattr(Settings, "embed_model") or Settings.embed_model is None:
-        Settings.embed_model = HuggingFaceEmbedding(
-            model_name=config['embedding']['model'],
-            device=config['embedding']['device']
-        )
+    # 确保嵌入模型可用（避免默认回退到 OpenAI 依赖）
+    embed_model = _get_or_init_embed_model(config)
     
     db = chromadb.PersistentClient(path=persist_dir)
     chroma_collection = db.get_or_create_collection(collection_name)
@@ -104,7 +112,7 @@ def build_or_load_index(nodes: List[BaseNode] = None) -> VectorStoreIndex:
                  request_timeout=300.0
              )
              # 执行层次扩充
-             final_nodes = _generate_raptor_nodes(nodes, Settings.embed_model, summary_llm)
+             final_nodes = _generate_raptor_nodes(nodes, embed_model, summary_llm)
              
         # 保存节点以供 BM25 使用 (包含树结构的所有节点)
         with open(node_cache_path, "wb") as f:
