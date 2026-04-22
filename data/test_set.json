@@ -1,22 +1,42 @@
 [
   {
-    "question": "2023财年，公司的研发投入总额是多少？",
-    "ground_truth": "2023财年的研发投入总额为XX亿元。"
+    "question": "本次研报的核心研究问题是什么？",
+    "ground_truth": "本报告主要研究冲突缓和后，美债利率能否回到冲突前水平，以及影响其回落的关键因素。:contentReference[oaicite:0]{index=0}"
   },
   {
-    "question": "报告中提到公司利润率下降的主要原因有哪些？",
-    "ground_truth": "利润率下降的主要原因包括原材料成本上涨和供应链延迟。"
+    "question": "历史上原油冲击对美债利率的典型影响机制是什么？",
+    "ground_truth": "原油冲击通常使美债利率经历“先交易通胀、后交易增长”的两阶段过程，最终方向取决于宏观环境。:contentReference[oaicite:1]{index=1}"
   },
   {
-    "question": "请总结这份研报中提到的所有潜在政策风险。",
-    "ground_truth": "主要政策风险包括环保法规趋严、出口限制以及税收优惠政策的取消。"
+    "question": "本轮中东冲突中，美债利率上行幅度与历史相比如何？",
+    "ground_truth": "本轮冲突中美债利率上行幅度较为温和，最大约50bp，明显低于石油危机时期的150-200bp。:contentReference[oaicite:2]{index=2}"
   },
   {
-    "question": "对比去年，该公司在亚太地区的市场份额有什么变化？",
-    "ground_truth": "相比去年，该公司在亚太地区的市场份额增长了15%。"
+    "question": "当前市场对美国通胀路径的预期如何变化？",
+    "ground_truth": "市场预计美国CPI同比在二季度升至约3.7%-3.8%，随后在2026年下半年回落至3.2%-3.3%。:contentReference[oaicite:3]{index=3}"
   },
   {
-    "question": "研报给出的最终投资评级是什么？",
-    "ground_truth": "研报给出的最终投资评级为“买入”（Buy）。"
+    "question": "长期通胀预期在本轮冲突中是否发生明显变化？",
+    "ground_truth": "长期通胀预期较为稳定，5年/5年前瞻通胀率仍维持在约2.2%水平。:contentReference[oaicite:4]{index=4}"
+  },
+  {
+    "question": "研报认为冲突缓和后限制美债利率回落的主要因素有哪些？",
+    "ground_truth": "主要因素包括油价中枢可能抬升以及安全资产需求变化（如对美国信用的质疑）。:contentReference[oaicite:5]{index=5}"
+  },
+  {
+    "question": "报告中提到美国3月宏观经济数据表现如何？",
+    "ground_truth": "美国3月PPI环比0.5%低于预期，工业生产指数环比-0.5%，均弱于市场预期。:contentReference[oaicite:6]{index=6}"
+  },
+  {
+    "question": "当周全球大类资产的整体表现如何？",
+    "ground_truth": "当周全球股市普遍上涨，标普500上涨约4.5%，美债收益率下行，美元指数走弱，大宗商品价格波动。:contentReference[oaicite:7]{index=7}"
+  },
+  {
+    "question": "美国2026年财政赤字情况相较去年有何变化？",
+    "ground_truth": "2026年累计财政赤字为6903亿美元，低于去年同期的7331亿美元。:contentReference[oaicite:8]{index=8}"
+  },
+  {
+    "question": "本报告中提到的主要风险提示有哪些？",
+    "ground_truth": "主要风险包括地缘政治冲突升级、美国经济放缓超预期以及美联储政策超预期转鹰。:contentReference[oaicite:9]{index=9}"
   }
 ]

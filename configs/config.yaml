@@ -33,9 +33,9 @@ retrieval:
   final_top_k: 5                       # 最终送入生成的节点数 (与 reranker.top_n 保持一致)
 
 storage:
-  chroma_persist_dir: "./chroma_db/phase2_ultimate" # Phase 2 独立的高级数据库目录
+  chroma_persist_dir: "./chroma_db/phase2_raptor" # Phase 2 独立的高级数据库目录
   data_dir: "./data"                   # 存放原始 PDF 的目录
 
 evaluation:
   test_set_path: "./data/test_set.json"
-  judge_model: "qwen2.5:72b"           # 评估闭环的无情本地裁判
+  judge_model: "qwen2.5:7b"           # 评估闭环的无情本地裁判
