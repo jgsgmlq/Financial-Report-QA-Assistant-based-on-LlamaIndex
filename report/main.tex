@@ -1,0 +1,44 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tabularx}
+
+\geometry{margin=1in}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+
+\lstset{
+    backgroundcolor=\color{gray!10},
+    basicstyle=\ttfamily\small,
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true,
+}
+
+\begin{document}
+
+\title{Insight: Financial Report Analysis Engine - Project Report}
+\author{NLP Course Group}
+\date{\today}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\input{sections/1.abstract}
+\input{sections/2.introduction}
+\input{sections/3.architecture}
+\input{sections/4.modules}
+\input{sections/5.evaluation}
+\input{sections/6.conclusion}
+
+\end{document}

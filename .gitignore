@@ -35,3 +35,25 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# LaTeX build files
+# *.pdf
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# Other build files
+build/
+dist/
+*.egg-info/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

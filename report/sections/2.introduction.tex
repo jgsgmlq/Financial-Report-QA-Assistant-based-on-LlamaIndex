@@ -1,0 +1,65 @@
+\section{Introduction}
+
+\subsection{Project Background}
+
+With the rapid development of financial markets, the number and complexity of
+financial research reports are increasing. Analysts and investors need to
+quickly extract key information from a large number of reports to make informed
+investment decisions. However, traditional manual reading methods are
+inefficient and difficult to handle massive amounts of information.
+
+In recent years, the development of large language models (LLM) and
+retrieval-augmented generation (RAG) technology has provided new solutions for
+financial report analysis. By combining the capabilities of vector retrieval
+and large language models, intelligent analysis and question-answering for
+financial reports can be achieved.
+
+\subsection{Project Objectives}
+
+The core objective of the Insight: Financial Report Analysis Engine project is
+to build a vertical domain RAG question-answering system that benchmarks the
+NotebookLM experience, focusing on the analysis of long, information-dense
+financial PDF reports, and providing page-level citation tracking.
+
+Specific objectives include:
+
+\begin{enumerate}
+    \item Implement efficient parsing and processing of financial PDF reports
+    \item Build high-quality vector indexes to support fast and accurate information
+          retrieval
+    \item Integrate local large language models to provide intelligent question-answering
+          and analysis capabilities
+    \item Implement page-level citation tracking to enhance the credibility of answers
+    \item Establish a comprehensive evaluation system to ensure system performance
+\end{enumerate}
+
+\subsection{Technology Stack}
+
+The project adopts the following technology stack:
+
+\begin{itemize}
+    \item \textbf{Frontend Framework}: Gradio
+    \item \textbf{Backend Framework}: LlamaIndex v0.10+
+    \item \textbf{Vector Database}: ChromaDB
+    \item \textbf{Embedding Model}: BAAI/bge-m3
+    \item \textbf{Large Language Model}: Qwen2.5-7B/72B (locally deployed via Ollama)
+    \item \textbf{PDF Parsing}: PyMuPDF
+    \item \textbf{Evaluation Framework}: RAGAS
+\end{itemize}
+
+\subsection{Project Structure}
+
+The project adopts a modular design, mainly consisting of the following
+directory structure:
+
+\begin{itemize}
+    \item `src/ingest/`: Data ingestion layer, responsible for PDF parsing and chunking
+    \item `src/retrieval/`: Retrieval layer, implementing vector retrieval and hybrid retrieval
+    \item `src/generation/`: Generation layer, responsible for building the dialogue engine and generating answers
+    \item `src/evaluation/`: Evaluation layer, implementing RAGAS evaluation
+    \item `src/ui/`: Interaction layer, building Gradio frontend
+    \item `src/utils/`: Utility modules, providing configuration management and other functions
+    \item `configs/`: Configuration file directory
+    \item `data/`: Data file directory
+    \item `docs/`: Documentation directory
+\end{itemize}
