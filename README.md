@@ -1,74 +1,125 @@
-# 📈 Insight: 机构级金融研报智能工作台
+# Insight · 机构级金融研报智能工作台
 
-![Status](https://img.shields.io/badge/Status-Beta-brightgreen)
-![LLM](https://img.shields.io/badge/LLM-Qwen2.5--7B-blue)
-![RAG](https://img.shields.io/badge/Framework-LlamaIndex-purple)
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Beta-brightgreen" alt="Status" />
+  <img src="https://img.shields.io/badge/LLM-Qwen2.5--7B-blue" alt="LLM" />
+  <img src="https://img.shields.io/badge/Framework-LlamaIndex-purple" alt="Framework" />
+</p>
 
-**Insight** 是一个深度对标 **NotebookLM** 体验的 RAG (检索增强生成) 分析工作台，专为处理复杂排版的金融研报 (PDF) 而设计。
-
-系统从底层解析、索引架构到前台沉浸式交互，经过了全方位的打磨。它不仅能“找到原文”，还能“读懂表格”、“总结宏观”并“合成知识”。
-
----
-
-## ✨ 核心特性 (Features)
-
-### 1. 数据底座 (Deep Parsing & Indexing)
-- **云端解析 (LlamaParse)**：智能穿透复杂 PDF 排版，完美提取财务表格、双栏文本并转化为高保真 Markdown。
-- **语义分块 (Semantic Chunking)**：抛弃生硬的按字数切断，基于 BGE 句向量识别语义边界，保持段落与表格的完整逻辑。
-- **混合检索 (Hybrid RRF)**：同时利用 `BM25` (关键词) 与 `bge-m3` (语义) 进行双路召回，使用 RRF (倒数排序融合) 算法合并。
-- **二次精排 (Reranking)**：引入 `bge-reranker-base` 过滤噪音，确保送入 LLM 的都是最高质量的证据。
-
-### 2. 认知升级 (Macro-Vision)
-- **RAPTOR 树状摘要**：系统在入库时自底向上构建层次摘要树 (Level 1~3)。无论问及细枝末节，还是宏观行业趋势，都能被准确命中。
-
-### 3. 沉浸式工作台 (NotebookLM-like UX)
-- **三分栏设计**：左侧数据面板、中间对话与灵感区域、右侧原生 PDF 阅读器。
-- **证据链联动 (Interactive Citations)**：AI 生成的每一个数据都会附带来源卡片。点击引用标签，右侧 PDF 预览区将**瞬间跳转至源文档对应的页码**。
-- **跨文档知识合成**：一键生成“多文档对比分析表格”，并可将其无缝存入“分析师灵感库 (Notepad)” 以供后续组装研究报告。
+**Insight** 是对标 **NotebookLM** 体验的 RAG（检索增强生成）分析工作台，面向复杂排版的金融研报（PDF）。从底层解析、索引到前台交互均针对研报场景优化：不仅定位原文，还能理解表格、提炼宏观观点并合成可用知识。
 
 ---
 
-## 🚀 快速启动
+## 核心特性
 
-### 1. 硬件配置要求
-为了流畅运行本地大模型与 RAG 检索链路，建议您的设备满足以下要求：
-*   **最小配置**：Apple Silicon (M1/M2) 或 Intel/AMD CPU + 16GB 内存。*(仅能勉强运行 7B 量化模型，推理速度较慢，不推荐用于深度跨文档分析。)*
-*   **推荐配置**：Apple Silicon (M1/M2/M3 Max/Pro) 配合至少 32GB 统一内存，或搭载 NVIDIA GPU (如 RTX 3060/4060 12GB+ VRAM) 的 Windows/Linux 设备。
+### 数据底座：深度解析与索引
 
-### 2. 本地模型服务 (Ollama)
-本项目所有核心分析均在本地计算，保护金融数据隐私。请先安装 [Ollama](https://ollama.com/) 客户端。
+| 能力 | 说明 |
+|------|------|
+| **云端解析 (LlamaParse)** | 穿透复杂 PDF，稳定抽取财务表格、双栏正文，输出高保真 Markdown。 |
+| **语义分块** | 基于 BGE 句向量切分语义边界，避免生硬按字数截断，保持段落与表格逻辑完整。 |
+| **混合检索 (Hybrid RRF)** | `BM25` 关键词 + `bge-m3` 语义双路召回，RRF（倒数排序融合）合并结果。 |
+| **二次精排** | `bge-reranker-base` 降噪，将高质量证据送入 LLM。 |
+
+### 认知升级：宏观视角（RAPTOR）
+
+入库时自底向上构建层次摘要树（Level 1～3），细粒度事实与行业级趋势均可被稳定检索。
+
+### 沉浸式工作台（类 NotebookLM）
+
+| 能力 | 说明 |
+|------|------|
+| **三分栏** | 左侧数据、中间对话与灵感区、右侧原生 PDF 阅读器。 |
+| **证据链联动** | 生成内容带引用卡片；点击引用，PDF 预览**跳转至对应页码**。 |
+| **跨文档合成** | 一键生成多文档对比表，并可写入「分析师灵感库 (Notepad)」，便于拼装正式报告。 |
+
+---
+
+## 快速启动与配置
+
+以下步骤默认你在**项目根目录**（含 `configs/`、`src/`、`requirements.txt` 的目录）操作。配置文件与 `.env` 均相对该目录加载；若从其他路径启动，可能导致找不到 `configs/config.yaml`。
+
+### 硬件与环境
+
+| 档位 | 建议配置 |
+|------|----------|
+| **最低** | Apple Silicon (M1/M2) 或 x86_64 CPU，**16GB** 内存。可跑 7B 量化模型，速度较慢，不适合重度跨文档分析。 |
+| **推荐** | Apple Silicon (M1/M2/M3 Pro/Max) **≥32GB** 统一内存；或 **NVIDIA GPU**（如 RTX 3060/4060，**≥12GB** 显存）的 Windows/Linux 主机。 |
+
+- **Python**：建议 **3.10+**（与当前依赖兼容）。
+- **网络**：首次运行会从 Hugging Face 拉取 `embedding` / `reranker` 等模型，需能访问外网。
+
+### 步骤 1：Python 虚拟环境与依赖
 
 ```bash
-# 下载并启动 Qwen2.5 7B 对话与摘要模型
+cd /path/to/CS6496-group
+
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+
+pip install -r requirements.txt
+```
+
+### 步骤 2：Ollama（本地 LLM）
+
+1. 安装并启动 [Ollama](https://ollama.com/)（默认服务地址 `http://localhost:11434`）。
+2. 拉取与配置一致的对话模型（须与 `configs/config.yaml` 中 `llm.strong_model` / `weak_model` 一致，默认如下）：
+
+```bash
 ollama pull qwen2.5:7b
 ```
 
-### 3. 配置高保真解析密钥
-在项目根目录创建 `.env` 文件，填入您的 [LlamaCloud API Key](https://cloud.llamaindex.ai/) 以激活强大的财务表格解析能力：
+3. 可选自检：`ollama list` 中能看到 `qwen2.5:7b`。若你修改了 YAML 中的模型名，请 `pull` 同名模型。
+
+### 步骤 3：环境变量 `.env`（LlamaParse）
+
+在项目根目录创建或编辑 `.env`，填入 [LlamaCloud API Key](https://cloud.llamaindex.ai/)：
+
 ```env
-LLAMA_CLOUD_API_KEY="llx-xxxxxxxxxxxxxxxx"
+LLAMA_CLOUD_API_KEY=llx-你的密钥
 ```
-*(注：如果不配置此项，系统将降级使用本地基础解析器，面对复杂财务报表时可能会出现数据乱序。)*
 
-### 4. 安装依赖与启动
+- **无 API Key**：在 `configs/config.yaml` 中将 `parser.use_llamaparse` 设为 `false`，将使用本地基础解析（`pymupdf` 等）；复杂报表版式可能不如云端解析稳定。
+- **有 API Key**：保持 `parser.use_llamaparse: true`（默认），即可获得高保真表格与双栏解析。
+
+### 步骤 4：`configs/config.yaml`（常用项）
+
+| 配置项 | 作用 |
+|--------|------|
+| `llm.ollama_base_url` | Ollama 地址，本机默认 `http://localhost:11434`。 |
+| `llm.strong_model` / `weak_model` | 须与 `ollama pull` 的模型名一致（默认 `qwen2.5:7b`）。 |
+| `embedding.device` | Apple Silicon 用 `mps`；NVIDIA 用 `cuda`；无 GPU 可改为 `cpu`（会较慢）。 |
+| `parser.use_llamaparse` | 为 `true` 时需配置 `LLAMA_CLOUD_API_KEY`；否则请改为 `false`。 |
+| `storage.chroma_persist_dir` / `data_dir` | 向量库与业务数据目录，默认 `./chroma_db`、`./data`。 |
+
+其余项（分块策略、RAPTOR、检索 `top_k` 等）可参考 [技术规格说明](docs/specs/technical_specification.md) 与 `docs/technical_design.md`。
+
+### 步骤 5：启动 Web 工作台
+
 ```bash
-# 推荐在虚拟环境中执行
-pip install -r requirements.txt
-
-# 启动工作台界面
+# 确认已激活虚拟环境，且当前目录为项目根目录
 python -m src.ui.app
 ```
-打开浏览器访问 `http://localhost:7860`。
+
+浏览器打开：**http://localhost:7860**
+
+### 启动前检查清单
+
+| 检查项 | 说明 |
+|--------|------|
+| 工作目录 | 运行 `python -m src.ui.app` 时 cwd 为项目根目录。 |
+| Ollama | 服务已启动，且已 `pull` 与 YAML 一致的模型。 |
+| 解析 | 使用 LlamaParse 时已配置 `.env`；否则已将 `use_llamaparse` 设为 `false`。 |
+| 设备 | `embedding.device` 与当前机器匹配（`mps` / `cuda` / `cpu`）。 |
 
 ---
 
-## 🛠️ 架构白皮书
+## 文档与评估
 
-如果您希望深入了解本系统的技术细节（如 RAPTOR 的实现机制、检索链路的数据流向等），请参阅我们详细的 [技术规格文档 (Technical Specification)](docs/specs/technical_specification.md)。
+- **技术细节**（RAPTOR、检索链路、数据流等）：[技术规格说明](docs/specs/technical_specification.md)
 
-## 🧪 自动化评估
-内置集成 `Ragas` 评估框架与正则级的 `Citation Audit` 工具。
-运行基准测试：
+项目集成 **Ragas** 与基于正则的 **Citation Audit**。运行基准评估：
+
 ```bash
 python -m src.evaluation.ragas_eval
 ```
