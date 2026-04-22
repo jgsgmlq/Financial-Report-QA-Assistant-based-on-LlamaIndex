@@ -1,0 +1,44 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[UTF8]{ctex}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\geometry{margin=1in}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+
+\lstset{
+    backgroundcolor=\color{gray!10},
+    basicstyle=\ttfamily\small,
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true,
+}
+
+\begin{document}
+
+\title{Insight: 金融研报分析引擎 - 项目报告}
+\author{NLP课程小组}
+\date{\today}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\input{sections/abstract}
+\input{sections/introduction}
+\input{sections/architecture}
+\input{sections/modules}
+\input{sections/evaluation}
+\input{sections/conclusion}
+
+\end{document}
