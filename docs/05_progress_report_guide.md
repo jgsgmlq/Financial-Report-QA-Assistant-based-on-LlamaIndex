@@ -10,6 +10,39 @@
 - 默认 shell 为 `zsh`，默认 Python 虚拟环境为 `.venv`。
 - 中期报告正式数据必须使用 **20 题**测试集（5 题仅用于本地冒烟，不可用于最终对比结论）。
 - 两轮实验必须使用**同一批 PDF**与**同一份测试集**，只改变配置变量。
+- 若你需要先快速验证流程，可使用“**单 PDF 极速模式**”（见第 0.1 节），但在正式提交中需明确说明实验范围与局限性。
+
+---
+
+## 0.1) 单 PDF 极速模式（可选，用于赶进度）
+
+> 适用场景：时间紧、先跑通流程、先产出一版对比结果。  
+> 本模式核心是：`data/` 根目录只保留 1 份 PDF，显著缩短索引构建与调试时间。
+
+### 快速操作步骤
+
+1. 在 `data/` 下临时收纳其它 PDF（不删除）：
+
+```bash
+mkdir -p data/_pdf_hold
+mv data/H301_AP202604201821330558_1.pdf data/_pdf_hold/ 2>/dev/null
+mv data/H301_AP202604211821369664_1.pdf data/_pdf_hold/ 2>/dev/null
+ls data/*.pdf
+```
+
+2. 确认仅保留目标文件：
+   - `data/H301_AP202604211821369599_1.pdf`
+
+3. 完成实验后如需恢复多文档场景：
+
+```bash
+mv data/_pdf_hold/*.pdf data/
+```
+
+### 报告写作提示（必须写）
+
+- 本次为**单文档实验**，用于快速验证 Phase 1 与 Phase 2A 的相对差异。  
+- 结论对多研报场景的外推能力有限，后续建议补充多文档复现实验。
 
 ---
 
@@ -85,6 +118,7 @@ evaluation:
 
 ```bash
 export PYTHONPATH=.
+source .venv/bin/activate
 python src/ingest/indexer.py
 ```
 
@@ -97,6 +131,7 @@ python src/ingest/indexer.py
 
 ```bash
 export PYTHONPATH=.
+source .venv/bin/activate
 python src/evaluation/ragas_eval.py
 ```
 
@@ -154,6 +189,7 @@ evaluation:
 
 ```bash
 export PYTHONPATH=.
+source .venv/bin/activate
 python src/ingest/indexer.py
 ```
 
@@ -169,6 +205,7 @@ python src/ingest/indexer.py
 
 ```bash
 export PYTHONPATH=.
+source .venv/bin/activate
 python src/evaluation/ragas_eval.py
 ```
 
@@ -199,6 +236,7 @@ ls -lh data/phase2_evaluation_report.csv
 建议在报告中额外补充：
 - 同一问题在 Phase 1 与 Phase 2A 的检索上下文差异示例（1-2 题）
 - 引用溯源质量变化（页码命中/引用可点击验证）
+- 若采用单 PDF 极速模式：补充“实验范围说明与局限性”小节（单文档 vs 多文档）。
 
 ---
 
@@ -215,6 +253,7 @@ ls -lh data/phase2_evaluation_report.csv
 - [ ] Phase 2A 评估日志截图（P2-4）
 - [ ] `data/phase2_evaluation_report.csv`
 - [ ] `docs/02_evaluation_metrics.md` 回填完成
+- [ ] （若使用单 PDF 极速模式）报告中已明确写明单文档实验范围与局限性
 
 ---
 
@@ -231,3 +270,6 @@ ls -lh data/phase2_evaluation_report.csv
 
 - **Q4：72B 太慢或跑不动？**  
   可先用 7B 做冒烟验证，再按课程文档降级策略执行并在报告里明确说明。
+
+- **Q5：`zsh: command not found: python`？**  
+  说明当前终端未激活虚拟环境。先执行 `source .venv/bin/activate`，再运行本指南中的 `python ...` 命令；或临时改用 `python3`。
