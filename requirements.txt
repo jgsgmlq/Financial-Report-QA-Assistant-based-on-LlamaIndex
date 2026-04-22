@@ -1,26 +1,27 @@
-# 核心框架 (LlamaIndex v0.10+)
-llama-index-core>=0.10.0
+# 核心框架 (固定到已验证可用版本，避免模块兼容冲突)
+llama-index-core==0.12.52.post1
 
 # LLM 与 嵌入模型本地运行支持
-llama-index-llms-ollama
-llama-index-embeddings-huggingface
+llama-index-llms-ollama==0.6.2
+llama-index-embeddings-huggingface==0.5.5
 
 # 向量数据库
 chromadb
-llama-index-vector-stores-chroma
+llama-index-vector-stores-chroma==0.4.1
 
 # PDF 解析器 (支持双栏、高保真物理页码提取)
 pymupdf
-llama-index-readers-file
+llama-index-readers-file==0.4.11
 
 # 检索增强 (精排 Reranker)
-llama-index-postprocessor-flag-embedding-reranker
+llama-index-postprocessor-flag-embedding-reranker==0.3.0
+llama-index-retrievers-bm25==0.5.0
 
 # RAPTOR 树状摘要 (Phase 2 使用)
-llama-index-packs-raptor
+llama-index-packs-raptor==0.3.4
 
 # 本地无情裁判与评估框架
-ragas
+ragas==0.4.3
 
 # 沉浸式交互前端 (Phase 2 使用)
 gradio

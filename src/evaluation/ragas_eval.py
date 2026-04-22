@@ -8,17 +8,19 @@ from datasets import Dataset
 from llama_index.llms.ollama import Ollama
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core import PromptTemplate
+from llama_index.core.query_engine import RetrieverQueryEngine
 
 # Ragas 相关包
 from ragas import evaluate
-from ragas.metrics import faithfulness, answer_relevancy, context_precision
+from ragas.metrics import Faithfulness, AnswerRelevancy, ContextPrecision
+from ragas.run_config import RunConfig
 # 如果本地运行 Ragas 报错，需要引入以下包装器 (取决于 Ragas 的具体版本)
 from ragas.llms import LlamaIndexLLMWrapper
 from ragas.embeddings import LlamaIndexEmbeddingsWrapper
 
 # 项目内部模块
 from src.utils.config import GLOBAL_CONFIG
-from src.ingest.indexer import build_vector_index
+from src.ingest.indexer import get_index
 from src.retrieval.retriever import get_retriever
 from src.generation.pipeline import QA_PROMPT_TEMPLATE
 
@@ -53,7 +55,7 @@ def run_evaluation():
 
     # 3. 初始化待测系统的 RAG 管线 (使用单次查询引擎，防止测试题之间上下文污染)
     print("⚙️ [Pipeline] 准备待测系统引擎...")
-    index = build_vector_index()
+    index = get_index()
     retriever = get_retriever(index)
     
     # 使用基础生成模型 (如 7B) 作为答题选手
@@ -64,8 +66,8 @@ def run_evaluation():
     )
     
     # 构建 Query Engine
-    query_engine = index.as_query_engine(
-        retriever=retriever,
+    query_engine = RetrieverQueryEngine.from_args(
+        retriever,
         llm=answer_llm,
         text_qa_template=PromptTemplate(QA_PROMPT_TEMPLATE)
     )
@@ -104,10 +106,11 @@ def run_evaluation():
 
     # 5. 执行 Ragas 评估
     print("\n⚖️ [Evaluation] 裁判 72B 正在打分 (这一步需要大量算力，请耐心等待)...")
+    # 稳定性优先：显式注入本地裁判模型，并降低 answer_relevancy 的多生成采样压力
     metrics = [
-        context_precision, # 检索精度 (相关上下文是否排在前面)
-        faithfulness,      # 忠实度 (回答是否有幻觉，是否完全基于上下文)
-        answer_relevancy   # 回答相关性 (回答是否切中问题)
+        ContextPrecision(llm=ragas_llm),                       # 检索精度 (相关上下文是否排在前面)
+        Faithfulness(llm=ragas_llm),                           # 忠实度 (回答是否有幻觉，是否完全基于上下文)
+        AnswerRelevancy(llm=ragas_llm, embeddings=ragas_emb, strictness=1),  # 回答相关性
     ]
     
     result = evaluate(
@@ -115,6 +118,8 @@ def run_evaluation():
         metrics=metrics,
         llm=ragas_llm,
         embeddings=ragas_emb,
+        run_config=RunConfig(timeout=600, max_retries=3, max_workers=1),
+        batch_size=1,
         raise_exceptions=False # 防止个别题目打分失败导致整个流程崩溃
     )
 

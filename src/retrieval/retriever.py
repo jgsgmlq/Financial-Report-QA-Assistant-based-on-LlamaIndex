@@ -5,6 +5,7 @@ from llama_index.core.retrievers import BaseRetriever, QueryFusionRetriever
 from llama_index.retrievers.bm25 import BM25Retriever
 from llama_index.core.schema import NodeWithScore, BaseNode, Document
 from llama_index.core.postprocessor import SentenceTransformerRerank
+from llama_index.llms.ollama import Ollama
 
 # 导入全局配置
 from src.utils.config import GLOBAL_CONFIG
@@ -71,6 +72,13 @@ def get_hybrid_retriever(index: VectorStoreIndex) -> BaseRetriever:
         similarity_top_k=GLOBAL_CONFIG["retrieval"].get("vector_top_k", 20),
         num_queries=1,
         mode="reciprocal_rerank",
+        # 显式注入本地 LLM，避免 QueryFusionRetriever 回退到 OpenAI 默认配置
+        llm=Ollama(
+            model=GLOBAL_CONFIG["llm"]["weak_model"],
+            base_url=GLOBAL_CONFIG["llm"]["ollama_base_url"],
+            temperature=0.0,
+            request_timeout=300.0,
+        ),
     )
     
     return fusion_retriever
